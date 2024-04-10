@@ -25,7 +25,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(ProjectName ProjectName.c lcd.c app_clock.c)
+add_executable(ProjectName main.c lcd.c app_clock.c)
 
 pico_set_program_name(ProjectName "ProjectName")
 pico_set_program_version(ProjectName "0.1")
