@@ -5,9 +5,10 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "app_alert.h"
+#include "app_keys.h"
 #include "lcd.h"
 #include "app_clock.h"
-#include "app_alert.h"
 
 #define DS3231_SDA 4
 #define DS3231_SCL 5
@@ -84,11 +85,14 @@ int main(){
     init_mcu();
     lcd_init();
     app_alert_init();
+    app_keys_init();
     alert_blink_hz(4);
 
     // add_repeating_timer_ms(100, foo, NULL, &timer);
    
     while (true){
+        app_keys_update();
+
         switch (system.status){
         case SCREEN_CLOCK:
             app_clock_update();
@@ -102,7 +106,6 @@ int main(){
             system.status = SCREEN_CLOCK;
             break;
         }
-        sleep_ms(1000);
     }
 
     return 0;
