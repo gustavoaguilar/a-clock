@@ -8,6 +8,7 @@
 #include "app_alert.h"
 #include "app_keys.h"
 #include "lcd.h"
+#include "dialog.h"
 #include "app_clock.h"
 
 #define DS3231_SDA 4
@@ -43,7 +44,7 @@ bool foo(struct repeating_timer *t){
 
 void init_mcu(){
     stdio_init_all();
-    uart_init(uart0, 9600);
+    uart_init(uart0, 115200);
     gpio_set_function(0, GPIO_FUNC_UART);
     gpio_set_function(1, GPIO_FUNC_UART);
     uart_puts(uart0, " Hello, UART!\r\n");
@@ -86,7 +87,7 @@ int main(){
     lcd_init();
     app_alert_init();
     app_keys_init();
-    alert_blink_hz(4);
+    alert_blink_hz(1);
 
     // add_repeating_timer_ms(100, foo, NULL, &timer);
    
@@ -99,8 +100,10 @@ int main(){
             app_clock_draw();
             break;
         case SCREEN_TEST:
-            lcd_update_line("Hello", 1);
-            bme280_update();
+            if(dialog_get_uint32("Type a number!", "Number", 0) >= 15){
+                system.status = SCREEN_CLOCK;
+                puts("switing to clock");
+            }
             break;
         default:
             system.status = SCREEN_CLOCK;
