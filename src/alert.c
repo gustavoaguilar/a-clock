@@ -2,8 +2,8 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "app_alert.h"
-#include "lcd.h"
+#include "../inc/alert.h"
+#include "../inc/lcd.h"
 
 #define LED_PIN 13
 

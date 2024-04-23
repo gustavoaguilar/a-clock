@@ -1,8 +1,8 @@
-#include "dialog.h"
-#include "lcd.h"
 #include <string.h>
 #include <stdio.h>
-#include <app_keys.h>
+#include "../inc/keys.h"
+#include "../inc/dialog.h"
+#include "../inc/lcd.h"
 
 uint32_t dialog_get_uint32(const char* title, const char* content, const uint32_t initial_value){
     return dialog_get_uint32_range(title, content, initial_value, 0, UINT32_MAX);

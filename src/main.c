@@ -5,13 +5,11 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "lcd.h"
-#include "app_clock.h"
-
-#define PIN_RGB_R 13
-#define PIN_RGB_G 14
-#define PIN_RGB_B 15
-#define RGB_MASK ((1 << PIN_RGB_R) | (1 << PIN_RGB_G) | (1 << PIN_RGB_B))
+#include "../inc/alert.h"
+#include "../inc/keys.h"
+#include "../inc/lcd.h"
+#include "../inc/dialog.h"
+#include "../inc/app_clock.h"
 
 #define DS3231_SDA 4
 #define DS3231_SCL 5
@@ -33,13 +31,6 @@ bool foo(struct repeating_timer *t){
     static bool status = false;
     static int counter = 0;
 
-    if (status){
-        status = false;
-    }else{
-        status = true;
-    }
-
-    gpio_put(PICO_DEFAULT_LED_PIN, status);
     if(counter == 10){
         counter = 0;
         if(system.status == SCREEN_CLOCK)
@@ -53,7 +44,7 @@ bool foo(struct repeating_timer *t){
 
 void init_mcu(){
     stdio_init_all();
-    uart_init(uart0, 9600);
+    uart_init(uart0, 115200);
     gpio_set_function(0, GPIO_FUNC_UART);
     gpio_set_function(1, GPIO_FUNC_UART);
     uart_puts(uart0, " Hello, UART!\r\n");
@@ -64,23 +55,6 @@ void init_mcu(){
     gpio_pull_up(DS3231_SDA);
     gpio_pull_up(DS3231_SCL);
 
-    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
-
-    gpio_init(PIN_RGB_R);
-    gpio_set_dir(PIN_RGB_R, GPIO_OUT);
-    gpio_put(PIN_RGB_R, false);
-
-    gpio_init(PIN_RGB_G);
-    gpio_set_dir(PIN_RGB_G, GPIO_OUT);
-    gpio_put(PIN_RGB_G, false);
-
-    gpio_init(PIN_RGB_B);
-    gpio_set_dir(PIN_RGB_B, GPIO_OUT);
-    gpio_put(PIN_RGB_B, false);
-
-    gpio_put_masked(RGB_MASK, (RGB_MASK & ~(1<<PIN_RGB_B)));
 }
 
 #define BME280_ADDR 0x76
@@ -111,24 +85,30 @@ void bme280_update(){
 int main(){
     init_mcu();
     lcd_init();
+    app_alert_init();
+    app_keys_init();
+    alert_blink_hz(1);
 
-    add_repeating_timer_ms(500, foo, NULL, &timer);
+    // add_repeating_timer_ms(100, foo, NULL, &timer);
    
     while (true){
+        app_keys_update();
+
         switch (system.status){
         case SCREEN_CLOCK:
             app_clock_update();
             app_clock_draw();
             break;
         case SCREEN_TEST:
-            lcd_update_line("Hello", 1);
-            bme280_update();
+            if(dialog_get_uint32("Type a number!", "Number", 0) >= 15){
+                system.status = SCREEN_CLOCK;
+                puts("switing to clock");
+            }
             break;
         default:
             system.status = SCREEN_CLOCK;
             break;
         }
-        sleep_ms(1000);
     }
 
     return 0;
