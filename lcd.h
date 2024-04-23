@@ -14,7 +14,7 @@
 #define LCD_D7 21
 
 void lcd_send_string(char* str, uint32_t len);
-void lcd_update_line(char* str, const int line);
+void lcd_update_line(const char* str, const int line);
 
 void lcd_init();
 void lcd_clear();
