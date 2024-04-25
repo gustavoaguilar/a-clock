@@ -26,6 +26,7 @@ pico_sdk_init()
 # Add executable. Default name is the project name, version 0.1
 add_executable(ProjectName
   src/main.c
+  src/ds3231.c
   src/dialog.c
   src/keys.c
   src/lcd.c
