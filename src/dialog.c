@@ -1,8 +1,8 @@
-#include "dialog.h"
-#include "lcd.h"
 #include <string.h>
 #include <stdio.h>
-#include <app_keys.h>
+#include "../inc/keys.h"
+#include "../inc/dialog.h"
+#include "../inc/lcd.h"
 
 uint32_t dialog_get_uint32(const char* title, const char* content, const uint32_t initial_value){
     return dialog_get_uint32_range(title, content, initial_value, 0, UINT32_MAX);
@@ -22,11 +22,11 @@ inline uint32_t dialog_get_uint32_range(const char* title, const char* content,
     lcd_update_line(title, 1);
     lcd_update_line("", 2);
     while(!keys_is_released(KEY_MID)){
-        app_keys_update();
+        keys_update();
     }
 
     do{
-        app_keys_update();
+        keys_update();
         
         if(ret > min && keys_is_pressed(KEY_LEFT)){
             ret--;

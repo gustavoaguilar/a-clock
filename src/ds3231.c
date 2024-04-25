@@ -1,10 +1,5 @@
-#ifndef DS3231_H
-#define DS3231_H
-
+#include "../inc/ds3231.h"
 #include "hardware/i2c.h"
-
-#define DS3231_SDA 4
-#define DS3231_SCL 5
 
 #define DS3231_ADDR 0x68
 #define DS3231_REG_SECONDS 0x00
@@ -14,27 +9,6 @@
 #define DS3231_REG_DATE 0x04
 #define DS3231_REG_MONTH 0x05
 #define DS3231_REG_YEAR 0x06
-
-enum DS3231_DAY_t{
-    SUNDAY = 1,
-    MONDAY,
-    TUESDAY,
-    WEDNESDAY,
-    THURSDAY,
-    FRIDAY,
-    SATURDAY
-};
-
-struct DS3231_Data{
-    int seconds;
-    int minutes;
-    int hours;
-
-    enum DS3231_DAY_t day;
-    int date;
-    int month;
-    int year;
-};
 
 int ds3231_get_reg_value(const uint8_t reg, uint8_t* value){
     int ret = i2c_write_blocking(i2c_default, DS3231_ADDR, &reg, 1, true);
@@ -108,17 +82,14 @@ int ds3231_get_data(struct DS3231_Data* data){
 int ds3231_set_data(struct DS3231_Data data){
     int ret = 0;
 
-    puts("set year");
     uint8_t val = ((data.year/10) << 4) | data.year%10;
     ret = ds3231_set_reg_value(DS3231_REG_YEAR, val);
     if(ret != 0) return PICO_ERROR_GENERIC;
     
-    puts("set month");
     val = ((data.month/10) << 4) | data.month%10;
     ret = ds3231_set_reg_value(DS3231_REG_MONTH, val);
     if(ret != 0) return PICO_ERROR_GENERIC;
 
-    puts("set date");
     val = ((data.date/10) << 4) | data.date%10;
     ret = ds3231_set_reg_value(DS3231_REG_DATE, val);
     if(ret != 0) return PICO_ERROR_GENERIC;
@@ -156,10 +127,9 @@ struct DS3231_Data ds3231_generate_data(int hours, int minutes, int seconds,
     return data;
 }
 
-void ds3231_force_value() {
-    struct DS3231_Data ds3231 = ds3231_generate_data(22,48,0,4,31,1,24);
-    if(ds3231_set_data(ds3231)){
-        puts("Failed to set time");
-    }
-}
-#endif
+// void ds3231_force_value() {
+//     struct DS3231_Data ds3231 = ds3231_generate_data(22,48,0,4,31,1,24);
+//     if(ds3231_set_data(ds3231)){
+//         puts("Failed to set time");
+//     }
+// }

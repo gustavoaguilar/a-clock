@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "lcd.h"
+#include "../inc/lcd.h"
 
 #define LCD_DATA_MASK ((1 << LCD_D4) | (1 << LCD_D5) | (1 << LCD_D6) |\
  (1 << LCD_D7))

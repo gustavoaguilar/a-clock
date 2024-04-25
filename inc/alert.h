@@ -2,7 +2,7 @@
 #define ALERT_H
 #include<unistd.h>
 
-void app_alert_init();
+void alert_init();
 
 void alert_blink();
 void alert_blink_hz(uint8_t freq);

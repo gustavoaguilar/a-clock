@@ -2,11 +2,11 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "app_clock.h"
-#include "lcd.h"
-#include "ds3231.h"
-#include "app_keys.h"
-#include "dialog.h"
+#include "../inc/app_clock.h"
+#include "../inc/lcd.h"
+#include "../inc/ds3231.h"
+#include "../inc/keys.h"
+#include "../inc/dialog.h"
 
 struct DS3231_Data ds3231;
 
@@ -55,7 +55,7 @@ void app_clock_update(){
         }
         busy_wait_ms(1000);
         while(!keys_is_released(KEY_MID)){
-            app_keys_update();
+            keys_update();
         }
     }
 }
