@@ -22,11 +22,11 @@ inline uint32_t dialog_get_uint32_range(const char* title, const char* content,
     lcd_update_line(title, 1);
     lcd_update_line("", 2);
     while(!keys_is_released(KEY_MID)){
-        app_keys_update();
+        keys_update();
     }
 
     do{
-        app_keys_update();
+        keys_update();
         
         if(ret > min && keys_is_pressed(KEY_LEFT)){
             ret--;

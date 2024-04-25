@@ -39,12 +39,13 @@ void init_mcu(){
 int main(){
     init_mcu();
     lcd_init();
-    app_alert_init();
-    app_keys_init();
+    alert_init();
+    keys_init();
+    
     alert_blink_hz(1);
 
     while (true){
-        app_keys_update();
+        keys_update();
 
         switch (system.status){
         case SCREEN_CLOCK:

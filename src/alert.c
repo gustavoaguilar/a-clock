@@ -11,7 +11,7 @@ static bool led_status = false;
 static uint32_t blink_speed = 0;
 static struct repeating_timer timer;
 
-void app_alert_init(){
+void alert_init(){
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
     gpio_put(LED_PIN, false);

@@ -55,7 +55,7 @@ void app_clock_update(){
         }
         busy_wait_ms(1000);
         while(!keys_is_released(KEY_MID)){
-            app_keys_update();
+            keys_update();
         }
     }
 }

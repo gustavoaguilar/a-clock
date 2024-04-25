@@ -12,8 +12,8 @@ enum Keys{
 #define KEY_RIGHT_PIN 7
 #define KEY_MID_PIN 8
 
-void app_keys_init();
-void app_keys_update();
+void keys_init();
+void keys_update();
 
 bool keys_is_pressed(enum Keys k);
 bool keys_is_released(enum Keys k);

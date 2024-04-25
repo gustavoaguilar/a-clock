@@ -16,7 +16,7 @@ static struct Button_t button_left;
 static struct Button_t button_right;
 static struct Button_t button_mid;
 
-void app_keys_init(){
+void keys_init(){
     gpio_set_dir(KEY_LEFT_PIN, false);
     gpio_set_dir(KEY_RIGHT_PIN, false);
     gpio_set_dir(KEY_MID_PIN, false);
@@ -62,7 +62,7 @@ void update_button(struct Button_t *b){
     }
 }
 
-void app_keys_update(){
+void keys_update(){
     update_button(&button_left);
     update_button(&button_right);
     update_button(&button_mid);    
