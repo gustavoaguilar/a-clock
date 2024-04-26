@@ -11,10 +11,12 @@
 #include "../inc/lcd.h"
 #include "../inc/dialog.h"
 #include "../inc/app_clock.h"
+#include "../inc/app_pomodoro.h"
 
 enum Screens_enum {
     SCREEN_BLANK = 0,
     SCREEN_CLOCK,
+    SCREEN_POMODORO,
     SCREEN_TEST,
 };
 
@@ -47,10 +49,24 @@ int main(){
     while (true){
         keys_update();
 
+        if(keys_is_pressed(KEY_LEFT)){
+            if(system.status != SCREEN_BLANK){
+                system.status--;
+            }
+        }
+        if(keys_is_pressed(KEY_RIGHT)){
+            if(system.status != SCREEN_POMODORO){
+                system.status++;
+            }
+        }
+
         switch (system.status){
         case SCREEN_CLOCK:
             app_clock_update();
             app_clock_draw();
+            break;
+        case SCREEN_POMODORO:
+            app_pomodoro_update();
             break;
         case SCREEN_TEST:
             if(dialog_get_uint32("Type a number!", "Number", 0) >= 15){

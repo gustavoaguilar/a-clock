@@ -14,32 +14,32 @@ void lcd_send_command(uint8_t cmd){
     gpio_put(LCD_RS, false);
     gpio_put_masked(LCD_DATA_MASK, ((cmd & 0x0F) << LCD_D4));
     gpio_put(LCD_E, true);
-    sleep_ms(1);
+    busy_wait_ms(1);
     gpio_put(LCD_E, false);
-    sleep_ms(1);
+    busy_wait_ms(1);
 }
 
 void lcd_send_command_4bit(uint8_t cmd){
     gpio_put(LCD_RS, false);
     gpio_put_masked(LCD_DATA_MASK, (((cmd >> 4) & 0x0F) << LCD_D4));
     gpio_put(LCD_E, true);
-    sleep_ms(1);
+    busy_wait_ms(1);
     gpio_put(LCD_E, false);
-    sleep_ms(1);
+    busy_wait_ms(1);
     gpio_put_masked(LCD_DATA_MASK, ((cmd & 0x0F) << LCD_D4));
     gpio_put(LCD_E, true);
-    sleep_ms(1);
+    busy_wait_ms(1);
     gpio_put(LCD_E, false);
-    sleep_ms(1);
+    busy_wait_ms(1);
 }
 
 void lcd_send_data(uint8_t data){
     gpio_put(LCD_RS, true);
     gpio_put_masked(LCD_DATA_MASK, ((data & 0x0F) << LCD_D4));
     gpio_put(LCD_E, true);
-    sleep_ms(1);
+    busy_wait_ms(1);
     gpio_put(LCD_E, false);
-    sleep_ms(1);
+    busy_wait_ms(1);
 }
 
 void lcd_send_data_4bit(uint8_t data){
@@ -47,15 +47,15 @@ void lcd_send_data_4bit(uint8_t data){
     
     gpio_put_masked(LCD_DATA_MASK, (((data >> 4) & 0x0F) << LCD_D4));
     gpio_put(LCD_E, true);
-    sleep_us(500);
+    busy_wait_us(500);
     gpio_put(LCD_E, false);
-    sleep_us(500);
+    busy_wait_us(500);
     
     gpio_put_masked(LCD_DATA_MASK, ((data & 0x0F) << LCD_D4));
     gpio_put(LCD_E, true);
-    sleep_us(500);
+    busy_wait_us(500);
     gpio_put(LCD_E, false);
-    sleep_us(500);
+    busy_wait_us(500);
 }
 
 void lcd_send_string(char* str, uint32_t len){

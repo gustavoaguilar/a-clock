@@ -30,8 +30,9 @@ add_executable(ProjectName
   src/dialog.c
   src/keys.c
   src/lcd.c
-  src/app_clock.c
   src/alert.c
+  src/app_clock.c
+  src/app_pomodoro.c
 )
 
 pico_set_program_name(ProjectName "ProjectName")
