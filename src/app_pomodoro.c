@@ -4,6 +4,10 @@
 #include "../inc/alert.h"
 #include "../inc/keys.h"
 
+struct AppInterface_t app_pomodoro_interface;
+
+void app_pomodoro_draw();
+
 enum PomodoroStatus_t{
     POMODORO_STATUS_INIT,
     POMODORO_STATUS_START_WORK,
@@ -41,12 +45,16 @@ bool pomodoro_tick(struct repeating_timer *t){
     }
 }
 
-void app_pomodoro_init(){
+void app_pomodoro_create(){
     pomodoro.work_timer = 25;
     pomodoro.break_timer = 5;
     pomodoro.rest_timer = 15;
     pomodoro.wait_timer = 0;
-    lcd_clear();
+    pomodoro.status = POMODORO_STATUS_INIT;
+}
+
+void app_pomodoro_destroy(){
+    cancel_repeating_timer(&seconds_timer);
 }
 
 void app_pomodoro_update(){
@@ -54,8 +62,6 @@ void app_pomodoro_update(){
     
     switch (pomodoro.status){
     case POMODORO_STATUS_INIT:
-        app_pomodoro_init();
-        alert_set(false);
         pomodoro.status = POMODORO_STATUS_START_WORK;
         lcd_update_line("Work", 1);
         lcd_update_line("Press to start", 2);
@@ -142,6 +148,7 @@ void app_pomodoro_draw(){
         lcd_update_line("Press to start", 2);
         break;
     case POMODORO_STATUS_RUN_FINISH_WORK:
+        lcd_update_line("Work", 1);
         snprintf(pomodoro.count_down_string, 16, "%02dm %02ds", ((uint8_t)pomodoro.wait_timer/60), ((uint8_t)pomodoro.wait_timer%60));
         lcd_update_line(pomodoro.count_down_string, 2);
         break;
@@ -150,6 +157,7 @@ void app_pomodoro_draw(){
         lcd_update_line("Press to start", 2);
         break;
     case POMODORO_STATUS_RUN_FINISH_BREAK:
+        lcd_update_line("Break", 1);
         snprintf(pomodoro.count_down_string, 16, "%02dm %02ds", ((uint8_t)pomodoro.wait_timer/60), ((uint8_t)pomodoro.wait_timer%60));
         lcd_update_line(pomodoro.count_down_string, 2);
         break;
@@ -158,6 +166,7 @@ void app_pomodoro_draw(){
         lcd_update_line("Press to Start", 2);
         break;
     case POMODORO_STATUS_RUN_FINISH_REST:
+        lcd_update_line("Rest", 1);
         snprintf(pomodoro.count_down_string, 16, "%02dm %02ds", ((uint8_t)pomodoro.wait_timer/60), ((uint8_t)pomodoro.wait_timer%60));
         lcd_update_line(pomodoro.count_down_string, 2);
         break;
@@ -166,4 +175,15 @@ void app_pomodoro_draw(){
     }
     // lcd_update_line("Pomodoro Timer", 1);
     // lcd_update_line("", 2);
+}
+
+void app_pomodoro_setup(){
+    app_pomodoro_interface.create = app_pomodoro_create;
+    app_pomodoro_interface.update = app_pomodoro_update;
+    app_pomodoro_interface.destroy = app_pomodoro_destroy;
+    app_pomodoro_interface.captured_input = app_pomodoro_captured_input;
+}
+
+bool app_pomodoro_captured_input(){
+    return false; // for now...
 }
