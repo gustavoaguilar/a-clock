@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "../inc/app_interface.h"
 #include "../inc/ds3231.h"
 #include "../inc/alert.h"
 #include "../inc/keys.h"
@@ -12,15 +13,23 @@
 #include "../inc/dialog.h"
 #include "../inc/app_clock.h"
 
-enum Screens_enum {
-    SCREEN_BLANK = 0,
-    SCREEN_CLOCK,
-    SCREEN_TEST,
+enum AppList_enum{
+    APP_CLOCK,
+    APP_LIST_SIZE,
 };
 
-struct System{
-    enum Screens_enum status;
-}system;
+struct AppInterface_t app_list[APP_LIST_SIZE];
+enum AppList_enum current_app;
+enum AppList_enum last_app;
+
+void create_apps(){
+    app_clock_setup();
+    app_list[APP_CLOCK] = app_clock_interface;
+
+    current_app = APP_CLOCK;
+    app_list[current_app].create();
+    last_app = current_app;
+}
 
 void init_mcu(){
     stdio_init_all();
@@ -43,25 +52,30 @@ int main(){
     keys_init();
     
     alert_blink_hz(1);
+    create_apps();
 
     while (true){
         keys_update();
 
-        switch (system.status){
-        case SCREEN_CLOCK:
-            app_clock_update();
-            app_clock_draw();
-            break;
-        case SCREEN_TEST:
-            if(dialog_get_uint32("Type a number!", "Number", 0) >= 15){
-                system.status = SCREEN_CLOCK;
-                puts("switing to clock");
+        if(keys_is_pressed(KEY_LEFT) && !app_list[current_app].captured_input()){
+            if(current_app > 0){
+                current_app--;
             }
-            break;
-        default:
-            system.status = SCREEN_CLOCK;
-            break;
         }
+
+        if(keys_is_pressed(KEY_RIGHT) && !app_list[current_app].captured_input()){
+            if(current_app < APP_LIST_SIZE - 1){
+                current_app++;
+            }
+        }
+        
+        if(current_app != last_app){
+            alert_set(false);
+            app_list[last_app].destroy();
+            app_list[current_app].create();
+            last_app = current_app;
+        }
+        app_list[current_app].update();
     }
 
     return 0;
