@@ -13,15 +13,8 @@
 #include "../inc/dialog.h"
 #include "../inc/app_clock.h"
 
-enum Screens_enum {
-    SCREEN_BLANK = 0,
-    SCREEN_CLOCK,
-    SCREEN_TEST,
-};
-
 enum AppList_enum{
     APP_CLOCK,
-    APP_TEST,
     APP_LIST_SIZE,
 };
 
@@ -77,6 +70,7 @@ int main(){
         }
         
         if(current_app != last_app){
+            alert_set(false);
             app_list[last_app].destroy();
             app_list[current_app].create();
             last_app = current_app;
