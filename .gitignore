@@ -31,3 +31,6 @@
 *.out
 *.app
 build/*
+
+# Vscode stuff
+.vscode/*
