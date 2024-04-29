@@ -72,11 +72,16 @@ void app_clock_draw(){
 }
 
 void app_clock_create(){
-
+    /*  Should create stuff 
+        Because this app uses only standard resources (ds3231 and keys)
+        there is nothing new to create
+    */
 }
 
 void app_clock_destroy(){
-    //Should destroy all "parallel" work
+    /*  Should destroy all "parallel" work
+        Nothing to destroy here
+    */
 }
 
 bool app_clock_captured_input() {
